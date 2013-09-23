@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+	<div id="scoreboard" class="pure-u-1-2">
+		<table class="pure-table pure-table-bordered pure-table-striped">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Dummy</th>
+					<th>Dummy</th>
+					<th>Dummy</th>
+					<th>Dummy</th>
+					<th>Score</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				{% for entry in scoreboard %}
+					<tr>
+						<td>{{ entry.name }}</td>
+						<td>Dummy</td>
+						<td>Dummy</td>
+						<td>Dummy</td>
+						<td>Dummy</td>
+						<td>{{ entry.score }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}
