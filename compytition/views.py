@@ -9,7 +9,9 @@ def index():
 	scoreboard.append({'name': 'Tyler', 'score': -10})
 
 	questions = []
-	questions.append({'content': '*Question 1* is hard.'})
-	questions.append({'content': '**Question 2** is `weird`.'})
+	questions.append({'content': 'Do some *emphasis*.'})
+	questions.append({'content': 'Do some **strong**.'})
+	questions.append({'content': 'Do some ***emphasized strong***.'})
+	questions.append({'content': 'Do some `code`.'})
 
 	return flask.render_template('index.html', scoreboard=scoreboard, questions=questions)
