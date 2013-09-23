@@ -1,0 +1,25 @@
+<div id="questions" class="pure-u-1-2">
+	<div class="pure-menu pure-menu-open pure-menu-horizontal">
+		<ul>
+			{% for q in questions %}
+				{% if loop.first %}
+					<li class="pure-menu-selected">
+				{% else %}
+					<li>
+				{% endif %}
+					<a href="#q{{ loop.index }}">Question {{ loop.index }}</a>
+				</li>
+			{% endfor %}
+		</ul>
+	</div>
+	{% for q in questions %}
+		{% if loop.first %}
+			<div id="q{{ loop.index }}">
+		{% else %}
+			<div id="q{{ loop.index }}" style="display: none">
+		{% endif %}
+			<h2>Question {{ loop.index }}</h2>
+			{{ q.content|markdown }}
+		</div>
+	{% endfor %}
+</div>

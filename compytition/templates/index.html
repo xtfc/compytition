@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-	<div id="content" class="pure-u">
-		{{ content|safe }}
-	</div>
+	{% include "questions.html" %}
+	{% include "scoreboard.html" %}
 {% endblock %}
