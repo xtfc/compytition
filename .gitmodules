@@ -1,3 +1,6 @@
 [submodule "compytition-grader"]
 	path = compytition-grader
 	url = git@github.com:scizzorz/compytition-grader.git
+[submodule "grader"]
+	path = grader
+	url = git@github.com:scizzorz/compytition-grader.git
