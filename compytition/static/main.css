@@ -1,13 +1,21 @@
 #container {
 	display: block;
-	border: 1px solid #000;
+	margin: 2em;
+}
+
+#container > div {
+	box-sizing: border-box;
+	padding: 1em;
 }
 
 #scoreboard table {
 	width: 100%;
 }
 
+#questions #tabs {
+	text-align: center;
+}
+
 #questions #submit {
-	display: block;
 	text-align: center;
 }
