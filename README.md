@@ -4,6 +4,13 @@ Programming contest server in Python.
 
 ## Setup
 
+Initialize submodules:
+
+```bash
+$ git submodule init
+$ git submodule update
+```
+
 Install dependencies:
 
 ```bash
