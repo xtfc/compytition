@@ -6,3 +6,8 @@
 #scoreboard table {
 	width: 100%;
 }
+
+#questions #submit {
+	display: block;
+	text-align: center;
+}

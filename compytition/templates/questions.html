@@ -8,9 +8,19 @@
 			{% endfor %}
 		</ul>
 	</div>
+
 	{% for q in questions %}
 		<div id="q{{ loop.index }}" class="question" style="display: none">
 			{{ q.content|markdown }}
 		</div>
 	{% endfor %}
+
+	<div id="submit">
+		<form class="pure-form">
+			<fieldset>
+				<input type="file">
+				<button type="submit" class="pure-button pure-button-primary">Submit</button>
+			</fieldset>
+		</form>
+	</div>
 </div>
