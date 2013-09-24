@@ -10,7 +10,7 @@
 	</div>
 
 	{% for q in config['QUESTIONS'] %}
-		<div id="{{ q.base }}" class="question" style="display: none">
+		<div id="{{ q.base }}-body" class="question" style="display: none">
 			{{ q.content|markdown }}
 		</div>
 	{% endfor %}

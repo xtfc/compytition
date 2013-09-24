@@ -4,7 +4,7 @@ function update_question(event) {
 
 	$('#questions .question').hide();
 	$('#questions .question-button').removeClass('pure-menu-selected');
-	$(window.location.hash).show();
+	$(window.location.hash + '-body').show();
 	$(window.location.hash + '-button').addClass('pure-menu-selected');
 }
 
