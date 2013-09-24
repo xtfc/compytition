@@ -13,6 +13,7 @@ for f in sorted(os.listdir(app.config['QUESTION_DIR'])):
 		'content': open(path).read()
 		}
 	app.config['QUESTIONS'].append(question)
+app.config['DATABASE'] = '/tmp/compytition.db'
 
 @app.route('/')
 def index():
