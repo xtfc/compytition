@@ -25,7 +25,7 @@ def requires_login(func):
 	@wraps(func)
 	def wrapper(*args, **kwargs):
 		if 'username' not in session:
-			flask.flash('You must be logged in to view this page.')
+			flask.flash('You must be logged in to view this page')
 			return flask.redirect(flask.url_for('login'))
 
 		return func(*args, **kwargs)
@@ -52,7 +52,7 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	if 'username' in session:
-		flask.flash('You are already logged in.')
+		flask.flash('You are already logged in')
 		return flask.redirect(flask.url_for('index'))
 
 	if request.method == 'GET':

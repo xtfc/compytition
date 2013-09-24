@@ -16,4 +16,10 @@ $(function() {
 		update_question();
 		$('#questions .question-button a').click(update_question);
 	}
+
+	if($('#messages').length) {
+		$('#messages').fadeOut(5000, function() {
+			$(this).hide();
+		});
+	}
 });
