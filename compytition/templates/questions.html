@@ -16,9 +16,10 @@
 	{% endfor %}
 
 	<div id="submit">
-		<form class="pure-form" action="{{ url_for('submit') }}" method="POST" enctype="multipart/form-data">
+		<form class="pure-form" action="{{ url_for('submit') }}" method="POST" enctype="multipart/form-data" onsubmit="return set_hash();">
 			<fieldset>
 				<input type="file" name="solution">
+				<input id="submit_for" type="hidden" name="question" value="err">
 				<button type="submit" class="pure-button pure-button-primary">Submit</button>
 			</fieldset>
 		</form>

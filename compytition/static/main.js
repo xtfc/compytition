@@ -8,6 +8,11 @@ function update_question(event) {
 	$(window.location.hash + '-button').addClass('pure-menu-selected');
 }
 
+function set_hash(event) {
+	$("#submit_for")[0].value = window.location.hash.substr(1);
+	return true;
+}
+
 $(function() {
 	if($('#questions').length) {
 		if(!window.location.hash) {

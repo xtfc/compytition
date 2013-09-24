@@ -7,6 +7,7 @@ from werkzeug import secure_filename
 from compytition import app, db
 
 # TODO move to config module
+app.config['SOLUTIONS_DIR'] = 'solutions'
 app.config['QUESTION_DIR'] = 'questions'
 app.config['QUESTIONS'] = []
 for f in sorted(os.listdir(app.config['QUESTION_DIR'])):
@@ -59,12 +60,18 @@ def index():
 @app.route('/submit', methods=['POST'])
 @requires_login
 def submit():
-	user = session['username']
 	ufile = request.files['solution']
-	filename = secure_filename(ufile.filename)
+
+	user = session['username']
+	question = os.path.basename(request.form['question'])
 	timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-	upload_path = 'solutions/' + user + '/' + timestamp + '/'
-	upload_file = upload_path + filename
+	filename = secure_filename(ufile.filename)
+	upload_path = os.path.join(
+		app.config['SOLUTIONS_DIR'],
+		user,
+		question,
+		timestamp)
+	upload_file = os.path.join(upload_path, filename)
 
 	try:
 		os.makedirs(upload_path)
