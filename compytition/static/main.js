@@ -9,9 +9,11 @@ function update_question(event) {
 }
 
 $(function() {
-	if(!window.location.hash) {
-		window.location.hash = '#q1';
+	if($('#questions').length) {
+		if(!window.location.hash) {
+			window.location.hash = '#q1';
+		}
+		update_question();
+		$('#questions .question-button a').click(update_question);
 	}
-	update_question();
-	$('#questions .question-button a').click(update_question);
 });
