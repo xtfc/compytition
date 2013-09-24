@@ -1,7 +1,9 @@
 import flask
 import os
+from datetime import datetime
 from flask import g, request, session
 from functools import wraps
+from werkzeug import secure_filename
 from compytition import app, db
 
 # TODO move to config module
@@ -53,6 +55,26 @@ def index():
 	g.scoreboard = [dict(id=row[0], name=row[1]) for row in cur]
 
 	return flask.render_template('index.html')
+
+@app.route('/submit', methods=['POST'])
+@requires_login
+def submit():
+	user = session['username']
+	ufile = request.files['solution']
+	filename = secure_filename(ufile.filename)
+	timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+	upload_path = 'solutions/' + user + '/' + timestamp + '/'
+	upload_file = upload_path + filename
+
+	try:
+		os.makedirs(upload_path)
+	except:
+		flask.abort(500)
+
+	ufile.save(upload_file)
+
+	return flask.redirect(flask.url_for('index'))
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

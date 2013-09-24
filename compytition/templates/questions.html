@@ -16,9 +16,9 @@
 	{% endfor %}
 
 	<div id="submit">
-		<form class="pure-form">
+		<form class="pure-form" action="{{ url_for('submit') }}" method="POST" enctype="multipart/form-data">
 			<fieldset>
-				<input type="file">
+				<input type="file" name="solution">
 				<button type="submit" class="pure-button pure-button-primary">Submit</button>
 			</fieldset>
 		</form>
