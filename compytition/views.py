@@ -15,6 +15,6 @@ def index():
 	questions = []
 	for f in sorted(os.listdir(app.config['QUESTION_DIR'])):
 		path = os.path.join(app.config['QUESTION_DIR'], f)
-		questions.append({'src': path, 'content': open(path).read()})
+		questions.append({'base': f, 'src': path, 'content': open(path).read()})
 
 	return flask.render_template('index.html', scoreboard=scoreboard, questions=questions)
