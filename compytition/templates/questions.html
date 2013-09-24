@@ -2,7 +2,7 @@
 	<div id="tabs" class="pure-menu pure-menu-open pure-menu-horizontal">
 		<ul>
 			{% for q in questions %}
-				<li id="q{{ loop.index }}b" class="question-button">
+				<li id="q{{ loop.index }}-button" class="question-button">
 					<a href="#q{{ loop.index }}">Q{{ loop.index }}</a>
 				</li>
 			{% endfor %}
