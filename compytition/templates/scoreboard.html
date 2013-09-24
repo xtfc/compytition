@@ -2,24 +2,22 @@
 	<table class="pure-table pure-table-bordered pure-table-striped">
 		<thead>
 			<tr>
+				<th>ID</th>
 				<th>Name</th>
-				<th>Dummy</th>
-				<th>Dummy</th>
-				<th>Dummy</th>
-				<th>Dummy</th>
-				<th>Score</th>
+				{% for question in config['QUESTIONS'] %}
+					<th>{{ question.base }}</th>
+				{% endfor %}
 			</tr>
 		</thead>
 
 		<tbody>
 			{% for entry in g.scoreboard %}
 				<tr>
+					<td>{{ entry.id }}</td>
 					<td>{{ entry.name }}</td>
-					<td>Dummy</td>
-					<td>Dummy</td>
-					<td>Dummy</td>
-					<td>Dummy</td>
-					<td>{{ entry.score }}</td>
+					{% for question in config['QUESTIONS'] %}
+						<td>Dummy</td>
+					{% endfor %}
 				</tr>
 			{% endfor %}
 		</tbody>

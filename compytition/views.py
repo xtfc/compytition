@@ -1,6 +1,6 @@
 import os
 import flask
-from compytition import app
+from compytition import app, db
 
 # TODO move to config module
 app.config['QUESTION_DIR'] = 'questions'
@@ -15,11 +15,19 @@ for f in sorted(os.listdir(app.config['QUESTION_DIR'])):
 	app.config['QUESTIONS'].append(question)
 app.config['DATABASE'] = '/tmp/compytition.db'
 
+@app.before_request
+def before_request():
+	flask.g.db = db.connect()
+
+@app.teardown_request
+def teardown_request(exception):
+	temp = getattr(flask.g, 'db', None)
+	if temp is not None:
+		temp.close()
+
 @app.route('/')
 def index():
-	flask.g.scoreboard = []
-	flask.g.scoreboard.append({'name': 'John', 'score': 10})
-	flask.g.scoreboard.append({'name': 'Phil', 'score': 0})
-	flask.g.scoreboard.append({'name': 'Tyler', 'score': -10})
+	cur = flask.g.db.execute('select id, username from users order by id asc')
+	flask.g.scoreboard = [dict(id=row[0], name=row[1]) for row in cur.fetchall()]
 
 	return flask.render_template('index.html')
