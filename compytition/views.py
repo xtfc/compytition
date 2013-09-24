@@ -1,6 +1,6 @@
 import os
 import flask
-from flask import g, request
+from flask import g, request, session
 from compytition import app, db
 
 # TODO move to config module
@@ -15,6 +15,10 @@ for f in sorted(os.listdir(app.config['QUESTION_DIR'])):
 		}
 	app.config['QUESTIONS'].append(question)
 app.config['DATABASE'] = '/tmp/compytition.db'
+app.config['SECRET_KEY'] = 'thiskeyneedstobesecret'
+
+def validate_login(username, password):
+	return username == 'testlogin'
 
 @app.before_request
 def before_request():
@@ -32,3 +36,22 @@ def index():
 	g.scoreboard = [dict(id=row[0], name=row[1]) for row in cur.fetchall()]
 
 	return flask.render_template('index.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+	if request.method == 'GET':
+		return flask.render_template('login.html')
+
+	if validate_login(request.form['username'], request.form['password']):
+		session['username'] = request.form['username']
+		flask.flash('Logged in')
+		return flask.redirect(flask.url_for('index'))
+
+	flask.flash('Invalid login')
+	return flask.redirect(flask.url_for('login'))
+
+@app.route('/logout')
+def logout():
+	session.pop('username', None)
+	flask.flash('Logged out')
+	return redirect(url_for('login'))

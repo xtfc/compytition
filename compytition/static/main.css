@@ -8,6 +8,15 @@
 	padding: 1em;
 }
 
+#login {
+	margin: 10em 0;
+	display: block;
+	text-align: center;
+}
+#login div {
+	display: inline-block;
+}
+
 #scoreboard table {
 	width: 100%;
 }
