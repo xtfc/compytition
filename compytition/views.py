@@ -1,5 +1,9 @@
+import os
 import flask
 from compytition import app
+
+# TODO move to config module
+app.config['QUESTION_DIR'] = 'questions'
 
 @app.route('/')
 def index():
@@ -9,9 +13,8 @@ def index():
 	scoreboard.append({'name': 'Tyler', 'score': -10})
 
 	questions = []
-	questions.append({'content': 'Do some *emphasis*.'})
-	questions.append({'content': 'Do some **strong**.'})
-	questions.append({'content': 'Do some ***emphasized strong***.'})
-	questions.append({'content': 'Do some `code`.'})
+	for f in sorted(os.listdir(app.config['QUESTION_DIR'])):
+		path = os.path.join(app.config['QUESTION_DIR'], f)
+		questions.append({'src': path, 'content': open(path).read()})
 
 	return flask.render_template('index.html', scoreboard=scoreboard, questions=questions)
