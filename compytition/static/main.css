@@ -10,8 +10,8 @@
 
 #login {
 	margin: 10em 0;
-	display: block;
 	text-align: center;
+	vertical-align: middle;
 }
 #login div {
 	display: inline-block;

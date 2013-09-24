@@ -51,6 +51,10 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+	if 'username' in session:
+		flask.flash('You are already logged in.')
+		return flask.redirect(flask.url_for('index'))
+
 	if request.method == 'GET':
 		return flask.render_template('login.html')
 
