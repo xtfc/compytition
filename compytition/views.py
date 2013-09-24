@@ -4,17 +4,21 @@ from compytition import app
 
 # TODO move to config module
 app.config['QUESTION_DIR'] = 'questions'
+app.config['QUESTIONS'] = []
+for f in sorted(os.listdir(app.config['QUESTION_DIR'])):
+	path = os.path.join(app.config['QUESTION_DIR'], f)
+	question = {
+		'base': f,
+		'src': path,
+		'content': open(path).read()
+		}
+	app.config['QUESTIONS'].append(question)
 
 @app.route('/')
 def index():
-	scoreboard = []
-	scoreboard.append({'name': 'John', 'score': 10})
-	scoreboard.append({'name': 'Phil', 'score': 0})
-	scoreboard.append({'name': 'Tyler', 'score': -10})
+	flask.g.scoreboard = []
+	flask.g.scoreboard.append({'name': 'John', 'score': 10})
+	flask.g.scoreboard.append({'name': 'Phil', 'score': 0})
+	flask.g.scoreboard.append({'name': 'Tyler', 'score': -10})
 
-	questions = []
-	for f in sorted(os.listdir(app.config['QUESTION_DIR'])):
-		path = os.path.join(app.config['QUESTION_DIR'], f)
-		questions.append({'base': f, 'src': path, 'content': open(path).read()})
-
-	return flask.render_template('index.html', scoreboard=scoreboard, questions=questions)
+	return flask.render_template('index.html')
