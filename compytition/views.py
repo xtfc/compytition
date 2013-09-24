@@ -19,7 +19,7 @@ app.config['DATABASE'] = '/tmp/compytition.db'
 app.config['SECRET_KEY'] = 'thiskeyneedstobesecret'
 
 def validate_login(username, password):
-	return username == 'testlogin'
+	return username and password == 'password'
 
 def requires_login(func):
 	@wraps(func)
@@ -34,6 +34,11 @@ def requires_login(func):
 @app.before_request
 def before_request():
 	g.db = db.connect()
+	if 'username' in session:
+		users = g.db.execute('select id from users where username=?', (session['username'],))
+		if len(users.fetchall()) == 0:
+			g.db.execute('insert into users(username) values(?)', (session['username'],))
+			g.db.commit()
 
 @app.teardown_request
 def teardown_request(exception):
@@ -45,7 +50,7 @@ def teardown_request(exception):
 @requires_login
 def index():
 	cur = g.db.execute('select id, username from users order by id asc')
-	g.scoreboard = [dict(id=row[0], name=row[1]) for row in cur.fetchall()]
+	g.scoreboard = [dict(id=row[0], name=row[1]) for row in cur]
 
 	return flask.render_template('index.html')
 
