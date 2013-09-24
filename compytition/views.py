@@ -62,9 +62,9 @@ def index():
 def submit():
 	ufile = request.files['solution']
 
-	user = session['username']
-	question = os.path.basename(request.form['question'])
-	timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+	user = secure_filename(session['username'])
+	question = secure_filename(request.form['question']))
+	timestamp = secure_filename(datetime.now().strftime('%Y-%m-%d-%H-%M-%S'))
 	filename = secure_filename(ufile.filename)
 	upload_path = os.path.join(
 		app.config['SOLUTIONS_DIR'],
