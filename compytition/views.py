@@ -1,6 +1,7 @@
-import os
 import flask
+import os
 from flask import g, request, session
+from functools import wraps
 from compytition import app, db
 
 # TODO move to config module
@@ -20,6 +21,16 @@ app.config['SECRET_KEY'] = 'thiskeyneedstobesecret'
 def validate_login(username, password):
 	return username == 'testlogin'
 
+def requires_login(func):
+	@wraps(func)
+	def wrapper(*args, **kwargs):
+		if 'username' not in session:
+			flask.flash('You must be logged in to view this page.')
+			return flask.redirect(flask.url_for('login'))
+
+		return func(*args, **kwargs)
+	return wrapper
+
 @app.before_request
 def before_request():
 	g.db = db.connect()
@@ -31,6 +42,7 @@ def teardown_request(exception):
 		temp.close()
 
 @app.route('/')
+@requires_login
 def index():
 	cur = g.db.execute('select id, username from users order by id asc')
 	g.scoreboard = [dict(id=row[0], name=row[1]) for row in cur.fetchall()]
@@ -54,4 +66,4 @@ def login():
 def logout():
 	session.pop('username', None)
 	flask.flash('Logged out')
-	return redirect(url_for('login'))
+	return flask.redirect(flask.url_for('login'))
