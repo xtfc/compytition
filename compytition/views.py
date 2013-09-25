@@ -6,21 +6,6 @@ from functools import wraps
 from werkzeug import secure_filename
 from compytition import app, db
 
-# TODO move to config module
-app.config['SOLUTIONS_DIR'] = 'solutions'
-app.config['QUESTION_DIR'] = 'questions'
-app.config['QUESTIONS'] = []
-for f in sorted(os.listdir(app.config['QUESTION_DIR'])):
-	path = os.path.join(app.config['QUESTION_DIR'], f)
-	question = {
-		'base': f,
-		'src': path,
-		'content': open(path).read()
-		}
-	app.config['QUESTIONS'].append(question)
-app.config['DATABASE'] = '/tmp/compytition.db'
-app.config['SECRET_KEY'] = 'thiskeyneedstobesecret'
-
 def validate_login(username, password):
 	return username and password == 'password'
 

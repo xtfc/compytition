@@ -6,4 +6,6 @@ app = flask.Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app)
 Markdown(app)
 
-import compytition.filters, compytition.views
+import compytition.config
+import compytition.filters
+import compytition.views
