@@ -1,27 +1,25 @@
-<div id="questions" class="pure-u-2-5">
-	<div id="tabs" class="pure-menu pure-menu-open pure-menu-horizontal">
-		<ul>
-			{% for q in config['QUESTIONS'] %}
-				<li id="{{ q.base }}-button" class="question-button">
-					<a href="#{{ q.base }}">{{ q.base }}</a>
-				</li>
-			{% endfor %}
-		</ul>
-	</div>
+<div id="tabs" class="pure-menu pure-menu-open pure-menu-horizontal">
+	<ul>
+		{% for q in config['QUESTIONS'] %}
+			<li id="{{ q.base }}-button" class="question-button">
+				<a href="#{{ q.base }}">{{ q.base }}</a>
+			</li>
+		{% endfor %}
+	</ul>
+</div>
 
-	{% for q in config['QUESTIONS'] %}
-		<div id="{{ q.base }}-body" class="question" style="display: none">
-			{{ q.content|markdown }}
-		</div>
-	{% endfor %}
-
-	<div id="submit">
-		<form class="pure-form" action="{{ url_for('submit') }}" method="POST" enctype="multipart/form-data" onsubmit="return set_hash();">
-			<fieldset>
-				<input type="file" name="solution">
-				<input id="submit_for" type="hidden" name="question" value="err">
-				<button type="submit" class="pure-button pure-button-primary">Submit</button>
-			</fieldset>
-		</form>
+{% for q in config['QUESTIONS'] %}
+	<div id="{{ q.base }}-body" class="question" style="display: none">
+		{{ q.content|markdown }}
 	</div>
+{% endfor %}
+
+<div id="submit">
+	<form class="pure-form" action="{{ url_for('submit') }}" method="POST" enctype="multipart/form-data" onsubmit="return set_hash();">
+		<fieldset>
+			<input type="file" name="solution">
+			<input id="submit_for" type="hidden" name="question" value="err">
+			<button type="submit" class="pure-button pure-button-primary">Submit</button>
+		</fieldset>
+	</form>
 </div>

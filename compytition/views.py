@@ -55,6 +55,13 @@ def index():
 	g.scoreboard = db.query('select id, username from users order by id asc')
 	return flask.render_template('index.html')
 
+@app.route('/scoreboard')
+@requires_login
+def scoreboard():
+	g.scoreboard = db.query('select id, username from users order by id asc')
+	return flask.render_template('scoreboard.html')
+
+
 @app.route('/submit', methods=['POST'])
 @requires_login
 def submit():
@@ -79,7 +86,6 @@ def submit():
 	ufile.save(upload_file)
 
 	return flask.redirect(flask.url_for('index'))
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

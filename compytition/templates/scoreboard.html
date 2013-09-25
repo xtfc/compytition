@@ -1,25 +1,25 @@
-<div id="scoreboard" class="pure-u-3-5">
-	<table class="pure-table pure-table-bordered pure-table-striped">
-		<thead>
-			<tr>
-				<th>ID</th>
-				<th>Name</th>
-				{% for question in config['QUESTIONS'] %}
-					<th>{{ question.base }}</th>
-				{% endfor %}
-			</tr>
-		</thead>
-
-		<tbody>
-			{% for entry in g.scoreboard %}
-				<tr>
-					<td>{{ entry.id }}</td>
-					<td>{{ entry.username }}</td>
-					{% for question in config['QUESTIONS'] %}
-						<td>Dummy</td>
-					{% endfor %}
-				</tr>
+<table class="pure-table pure-table-bordered pure-table-striped">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Name</th>
+			{% for question in config['QUESTIONS'] %}
+				<th>{{ question.base }}</th>
 			{% endfor %}
-		</tbody>
-	</table>
-</div>
+			<th>Total</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		{% for entry in g.scoreboard %}
+			<tr>
+				<td>{{ entry.id }}</td>
+				<td>{{ entry.username }}</td>
+				{% for question in config['QUESTIONS'] %}
+					<td>0</td>
+				{% endfor %}
+				<td>0</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>

@@ -9,8 +9,12 @@ function update_question(event) {
 }
 
 function set_hash(event) {
-	$("#submit_for")[0].value = window.location.hash.substr(1);
+	$('#submit_for')[0].value = window.location.hash.substr(1);
 	return true;
+}
+
+function update_scoreboard() {
+	$('#scoreboard').load('/scoreboard');
 }
 
 $(function() {
@@ -26,5 +30,9 @@ $(function() {
 		$('#messages').fadeOut(5000, function() {
 			$(this).hide();
 		});
+	}
+
+	if($('#scoreboard').length) {
+		setInterval('update_scoreboard()', 5000);
 	}
 });

@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-	{% include "questions.html" %}
-	{% include "scoreboard.html" %}
+	<div id="questions" class="pure-u-2-5">
+		{% include "questions.html" %}
+	</div>
+	<div id="scoreboard" class="pure-u-3-5">
+		{% include "scoreboard.html" %}
+	</div>
 {% endblock %}
