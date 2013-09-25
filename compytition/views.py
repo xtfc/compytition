@@ -63,7 +63,7 @@ def submit():
 	ufile = request.files['solution']
 
 	user = secure_filename(session['username'])
-	question = secure_filename(request.form['question']))
+	question = secure_filename(request.form['question'])
 	timestamp = secure_filename(datetime.now().strftime('%Y-%m-%d-%H-%M-%S'))
 	filename = secure_filename(ufile.filename)
 	upload_path = os.path.join(
