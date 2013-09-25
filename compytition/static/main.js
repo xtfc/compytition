@@ -16,6 +16,9 @@ function set_hash(event) {
 function update_scoreboard() {
 	$('#scoreboard').load('/scoreboard');
 }
+function update_status() {
+	$('#status').load('/status');
+}
 
 $(function() {
 	if($('#questions').length) {
@@ -34,5 +37,8 @@ $(function() {
 
 	if($('#scoreboard').length) {
 		setInterval('update_scoreboard()', 5000);
+	}
+	if($('#status').length) {
+		setInterval('update_status()', 5000);
 	}
 });

@@ -1,0 +1,5 @@
+{% for msg in g.status %}
+	<div id="msg-{{ msg.id }}" class="status {{ 'error' if msg.status != 0 else 'success'}}">
+		<pre><code>{{ msg.message }}</code></pre>
+	</div>
+{% endfor %}

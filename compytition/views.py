@@ -36,12 +36,17 @@ def requires_login(func):
 
 @app.before_request
 def before_request():
-	db.connect()
 	if 'username' in session:
+		db.connect()
 		user = db.query('select id from users where username=?', [session['username']], one=True)
 		if user is None:
 			db.execute('insert into users(username) values(?)', [session['username']])
 			db.commit()
+
+		g.user = db.query('select * from users where username=?', [session['username']], one=True)
+		g.scoreboard = db.query('select * from users order by id asc')
+		g.status = db.query('select * from status where username=? order by id desc', [session['username']])
+
 
 @app.teardown_request
 def teardown_request(exception):
@@ -52,15 +57,17 @@ def teardown_request(exception):
 @app.route('/')
 @requires_login
 def index():
-	g.scoreboard = db.query('select id, username from users order by id asc')
 	return flask.render_template('index.html')
 
 @app.route('/scoreboard')
 @requires_login
 def scoreboard():
-	g.scoreboard = db.query('select id, username from users order by id asc')
 	return flask.render_template('scoreboard.html')
 
+@app.route('/status')
+@requires_login
+def status():
+	return flask.render_template('status.html')
 
 @app.route('/submit', methods=['POST'])
 @requires_login

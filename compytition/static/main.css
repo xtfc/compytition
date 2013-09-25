@@ -36,3 +36,9 @@
 	text-align: center;
 }
 
+#status .error {
+	color: hsl(0, 80%, 40%);
+}
+#status .success {
+	color: hsl(120, 80%, 40%);
+}
