@@ -45,7 +45,7 @@ def before_request():
 
 		g.user = db.query('select * from users where username=?', [session['username']], one=True)
 		g.scoreboard = db.query('select * from users order by id asc')
-		g.status = db.query('select * from status where username=? order by id desc', [session['username']])
+		g.status = db.query('select * from status where username=? order by id desc limit 5', [session['username']])
 
 
 @app.teardown_request
