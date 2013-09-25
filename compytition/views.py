@@ -77,6 +77,10 @@ def submit():
 
 	ufile.save(upload_file)
 
+	db.execute('insert into status(username,status,message) values(?,?,?)',
+		[session['username'], 0, 'Your submission for {} was uploaded'.format(question)])
+	db.commit()
+
 	return flask.redirect(flask.url_for('index'))
 
 @app.route('/login', methods=['GET', 'POST'])
