@@ -36,12 +36,12 @@ def requires_login(func):
 
 @app.before_request
 def before_request():
-	g.db = db.connect()
+	db.connect()
 	if 'username' in session:
-		users = g.db.execute('select id from users where username=?', (session['username'],))
-		if len(users.fetchall()) == 0:
-			g.db.execute('insert into users(username) values(?)', (session['username'],))
-			g.db.commit()
+		user = db.query('select id from users where username=?', [session['username']], one=True)
+		if user is None:
+			db.execute('insert into users(username) values(?)', [session['username']])
+			db.commit()
 
 @app.teardown_request
 def teardown_request(exception):
@@ -52,9 +52,7 @@ def teardown_request(exception):
 @app.route('/')
 @requires_login
 def index():
-	cur = g.db.execute('select id, username from users order by id asc')
-	g.scoreboard = [dict(id=row[0], name=row[1]) for row in cur]
-
+	g.scoreboard = db.query('select id, username from users order by id asc')
 	return flask.render_template('index.html')
 
 @app.route('/submit', methods=['POST'])
