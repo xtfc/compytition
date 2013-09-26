@@ -20,6 +20,7 @@ $ pip install -U -r requirements.txt
 Configure the server:
 
 ```bash
+$ cp compytition/config.py.example compytition/config.py
 $ $EDITOR compytition/config.py
 ```
 
