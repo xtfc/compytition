@@ -9,6 +9,12 @@ from compytition import app, db
 def validate_login(username, password):
 	return username and password == 'password'
 
+def authenticate():
+	return flask.Response(
+		'Could not verify your access level for that URL.\n'
+		'You have to login with proper credentials', 401,
+		{'WWW-Authenticate': 'Basic realm="Login Required"'})
+
 def requires_login(func):
 	@wraps(func)
 	def wrapper(*args, **kwargs):
@@ -19,10 +25,20 @@ def requires_login(func):
 		return func(*args, **kwargs)
 	return wrapper
 
+def requires_auth(func):
+	@wraps(func)
+	def wrapper(*args, **kwargs):
+		auth = request.authorization
+		if not auth or not validate_login(auth.username, auth.password):
+			return authenticate()
+		session['username'] = auth.username
+		return func(*args, **kwargs)
+	return wrapper
+
 @app.before_request
 def before_request():
+	db.connect()
 	if 'username' in session:
-		db.connect()
 		user = db.query('select id from users where username=?', [session['username']], one=True)
 		if user is None:
 			db.execute('insert into users(username) values(?)', [session['username']])
@@ -59,13 +75,13 @@ def status():
 def submit():
 	ufile = request.files['solution']
 
-	user = secure_filename(session['username'])
+	username = secure_filename(session['username'])
 	question = secure_filename(request.form['question'])
 	timestamp = secure_filename(datetime.now().strftime('%Y-%m-%d-%H-%M-%S'))
 	filename = secure_filename(ufile.filename)
 	upload_path = os.path.join(
 		app.config['SOLUTIONS_DIR'],
-		user,
+		username,
 		question,
 		timestamp)
 	upload_file = os.path.join(upload_path, filename)
@@ -80,8 +96,13 @@ def submit():
 	db.execute('insert into status(username,status,message) values(?,?,?)',
 		[session['username'], 0, 'Your submission for {} was uploaded'.format(question)])
 	db.commit()
-
 	return flask.redirect(flask.url_for('index'))
+
+@app.route('/term', methods=['POST'])
+@requires_auth
+def term_submit():
+	submit()
+	return "Success."
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
