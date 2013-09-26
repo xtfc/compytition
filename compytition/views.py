@@ -1,13 +1,32 @@
 import flask
 import os
+import sys
 from datetime import datetime
 from flask import g, request, session
 from functools import wraps
 from werkzeug import secure_filename
 from compytition import app, db
 
+try:
+	import ldap
+except:
+	print "LDAP module not available"
+	sys.exit(1)
+
 def validate_login(username, password):
-	return username and password == 'password'
+	if not password:
+		password = ' '
+	con = ldap.initialize(app.config['LDAP_SERVER'])
+	dn = app.config['LDAP_DN'](username)
+	rv = con.simple_bind(dn, password)
+
+	try:
+		r = con.result(rv)
+		return (r[0] == 97)
+	except:
+		pass
+
+	return False
 
 def authenticate():
 	return flask.Response(
