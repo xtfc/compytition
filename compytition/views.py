@@ -10,7 +10,7 @@ from compytition import app, db
 try:
 	import ldap
 except:
-	print "LDAP module not available"
+	print 'LDAP module not available'
 	sys.exit(1)
 
 def validate_login(username, password):
@@ -31,7 +31,7 @@ def validate_login(username, password):
 def authenticate():
 	return flask.Response(
 		'Could not verify your access level for that URL.\n'
-		'You have to login with proper credentials', 401,
+		'You have to login with proper credentials.\n', 401,
 		{'WWW-Authenticate': 'Basic realm="Login Required"'})
 
 def requires_login(func):
@@ -121,7 +121,7 @@ def submit():
 @requires_auth
 def term_submit():
 	submit()
-	return "Success."
+	return 'Success.\n'
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
