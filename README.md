@@ -11,7 +11,7 @@ $ git submodule init
 $ git submodule update
 ```
 
-Install dependencies:
+Install dependencies (with `sudo` or inside of a `virtualenv`):
 
 ```bash
 $ pip install -U -r requirements.txt
@@ -23,6 +23,14 @@ Configure the server:
 $ $EDITOR compytition/config.py
 ```
 
+Write some questions:
+
+```bash
+$ mkdir -p questions
+$ echo "How write question?" > questions/q1
+...
+```
+
 Initialize database:
 
 ```bash
@@ -32,16 +40,8 @@ $ python
 $
 ```
 
-Write some questions:
-
-```bash
-$ mkdir -p questions
-$ echo "How write question?" > questions/q1
-...
-```
-
 Run the dev server:
 
 ```bash
-$ PYTHONPATH=. python -m compytition
+$ python -m compytition
 ```
