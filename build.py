@@ -1,15 +1,39 @@
 import bumpy
 import os, sys, shutil
 
+# won't be able to find compytition package without this
 if '.' not in sys.path:
 	sys.path.append('.')
-from compytition.db import Database
-from compytition import app
+
+# if compytition/config.py doesn't exist, this explodes
+try:
+	from compytition.db import Database
+	from compytition import app
+except:
+	pass
 
 bumpy.config(cli=True)
 
 @bumpy.task
+def setup():
+	'''Run standard setup tasks'''
+	bumpy.shell('git submodule init')
+	bumpy.shell('git submodule update')
+
+@bumpy.task
+def config():
+	'''Create the default config file and open it with $EDITOR'''
+	config_ex = os.path.join('compytition', 'config.py.example')
+	config = os.path.join('compytition', 'config.py')
+	if not os.path.exists(config):
+		print "Copying example config..."
+		shutil.copyfile(config_ex, config)
+
+	os.system('{} "{}"'.format(os.getenv('EDITOR', 'nano'), config))
+
+@bumpy.task
 def new(name):
+	'''Create a skeleton contest'''
 	path = os.path.join('contests', name)
 
 	print "Making skeleton contest directory..."
@@ -23,6 +47,7 @@ def new(name):
 
 @bumpy.task
 def init(name):
+	'''Initialize/reset a contest database'''
 	print "Reading question files..."
 	question_path = os.path.join('contests', name, 'questions')
 	questions = []
@@ -63,18 +88,10 @@ def init(name):
 
 @bumpy.task
 def run():
+	'''Run the production server'''
 	app.run(host='0.0.0.0')
 
 @bumpy.task
 def debug():
+	'''Run the debug server'''
 	app.run(host='0.0.0.0', debug=True)
-
-@bumpy.task
-def config():
-	config_ex = os.path.join('compytition', 'config.py.example')
-	config = os.path.join('compytition', 'config.py')
-	if not os.path.exists(config):
-		print "Copying example config..."
-		shutil.copyfile(config_ex, config)
-
-	os.system('{} "{}"'.format(os.getenv('EDITOR', 'nano'), config))

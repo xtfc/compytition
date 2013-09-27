@@ -4,13 +4,6 @@ Programming contest server in Python.
 
 ## Setup
 
-#### Initialize submodules:
-
-```bash
-$ git submodule init
-$ git submodule update
-```
-
 #### Install dependencies (with `sudo` or inside of a `virtualenv`):
 
 ```bash
@@ -18,6 +11,12 @@ $ pip install -U -r requirements.txt
 ```
 
 `pip` can usually be found in your distribution's `python-pip` package. If you want to use LDAP authentication (currently the only supported method), you will also need the `python-ldap` package.
+
+#### Run the setup script
+
+```bash
+$ bumpy setup
+```
 
 #### Configure the server:
 
