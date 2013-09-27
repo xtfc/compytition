@@ -14,10 +14,10 @@ function set_hash(event) {
 }
 
 function update_scoreboard() {
-	$('#scoreboard').load('/scoreboard');
+	$('#scoreboard').load('/' + contest + '/scoreboard');
 }
 function update_status() {
-	$('#status').load('/status');
+	$('#status').load('/' + contest + '/status');
 }
 
 $(function() {

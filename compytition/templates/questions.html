@@ -1,6 +1,6 @@
 <div id="tabs" class="pure-menu pure-menu-open pure-menu-horizontal">
 	<ul>
-		{% for q in config['QUESTIONS'] %}
+		{% for q in g.questions %}
 			<li id="{{ q.base }}-button" class="question-button">
 				<a href="#{{ q.base }}">{{ q.base }}</a>
 			</li>
