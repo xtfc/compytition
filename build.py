@@ -36,7 +36,8 @@ def init(name):
 	db.query('drop table if exists users')
 	db.query('''create table users (
 		id integer primary key autoincrement,
-		username text not null)''')
+		username text not null,'''
+		+ ', '.join(x[0] + ' integer default 0' for x in questions) + ')')
 
 	print "Creating status table..."
 	db.query('drop table if exists status')
