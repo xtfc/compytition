@@ -23,7 +23,8 @@ function update_status() {
 $(function() {
 	if($('#questions').length) {
 		if(!window.location.hash) {
-			window.location.hash = '#q1';
+			var i = $('#questions .question')[0].id;
+			window.location.hash = '#' + i.substr(0, i.length - 5);
 		}
 		update_question();
 		$('#questions .question-button a').click(update_question);
