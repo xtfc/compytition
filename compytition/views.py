@@ -60,15 +60,7 @@ def before_request():
 
 		g.db = Database(os.path.join(g.contest_path, 'data.db'))
 		g.scoreboard = g.db.query('select * from users order by id asc')
-		g.questions = []
-		for f in sorted(os.listdir(os.path.join(g.contest_path, 'questions'))):
-			path = os.path.join(g.contest_path, 'questions', f)
-			question = {
-				'base': f,
-				'src': path,
-				'content': open(path).read(),
-				}
-			g.questions.append(question)
+		g.questions = g.db.query('select * from questions order by id asc')
 
 		if 'username' in session:
 			uargs = [session['username']]

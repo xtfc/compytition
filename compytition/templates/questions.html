@@ -1,15 +1,15 @@
 <div id="tabs" class="pure-menu pure-menu-open pure-menu-horizontal">
 	<ul>
 		{% for q in g.questions %}
-			<li id="{{ q.base }}-button" class="question-button">
-				<a href="#{{ q.base }}">{{ q.base }}</a>
+			<li id="{{ q.name }}-button" class="question-button">
+				<a href="#{{ q.name }}">{{ q.name }}</a>
 			</li>
 		{% endfor %}
 	</ul>
 </div>
 
 {% for q in g.questions %}
-	<div id="{{ q.base }}-body" class="question" style="display: none">
+	<div id="{{ q.name }}-body" class="question" style="display: none">
 		{{ q.content|markdown }}
 	</div>
 {% endfor %}
