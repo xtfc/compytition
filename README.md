@@ -4,45 +4,56 @@ Programming contest server in Python.
 
 ## Setup
 
-Initialize submodules:
-
-```bash
-$ git submodule init
-$ git submodule update
-```
-
-Install dependencies (with `sudo` or inside of a `virtualenv`):
+#### Install dependencies (with `sudo` or inside of a `virtualenv`):
 
 ```bash
 $ pip install -U -r requirements.txt
 ```
 
-Configure the server:
+`pip` can usually be found in your distribution's `python-pip` package. If you want to use LDAP authentication (currently the only supported method), you will also need the `python-ldap` package.
+
+#### Run the setup script
 
 ```bash
-$ cp compytition/config.py.example compytition/config.py
-$ $EDITOR compytition/config.py
+$ bumpy setup
 ```
 
-Write some questions:
+#### Configure the server:
+
+Copy `compytition/config.py.example` to `compytition/config.py` and edit it. If you have `$EDITOR` set, this will do the work for you:
 
 ```bash
-$ mkdir -p questions
-$ echo "How write question?" > questions/q1
-...
+$ bumpy config
 ```
 
-Initialize database:
+#### Create a new contest:
 
 ```bash
-$ python
->>> from compytition import db
->>> db.init()
-$
+$ bumpy new <name>
 ```
 
-Run the dev server:
+#### Add / edit questions:
+
+Throw text files (with Markdown, if you'd like) into `contests/<name>/questions/` with **no extension**.
+
+#### Create contest database:
 
 ```bash
-$ python -m compytition
+$ bumpy init <name>
+```
+
+#### Run the server:
+
+For debug or development:
+
+***Do not use this for hosting contests! It allows execution of arbitrary Python code on the host.***
+
+```bash
+$ bumpy debug
+```
+
+For production:
+
+```bash
+$ bumpy run
 ```

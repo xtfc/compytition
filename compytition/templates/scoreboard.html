@@ -3,22 +3,20 @@
 		<tr>
 			<th>ID</th>
 			<th>Name</th>
-			{% for question in config['QUESTIONS'] %}
-				<th>{{ question.base }}</th>
+			{% for question in g.questions %}
+				<th>{{ question.name }}</th>
 			{% endfor %}
 			<th>Total</th>
 		</tr>
 	</thead>
 
 	<tbody>
-		{% for entry in g.scoreboard %}
+		{% for user in g.scoreboard %}
 			<tr>
-				<td>{{ entry.id }}</td>
-				<td>{{ entry.username }}</td>
-				{% for question in config['QUESTIONS'] %}
-					<td>0</td>
+				{% for field in user %}
+					<td>{{ field }}</td>
 				{% endfor %}
-				<td>0</td>
+				<td>?</td>
 			</tr>
 		{% endfor %}
 	</tbody>

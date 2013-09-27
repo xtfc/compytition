@@ -5,7 +5,8 @@ from datetime import datetime
 from flask import g, request, session
 from functools import wraps
 from werkzeug import secure_filename
-from compytition import app, db
+from compytition import app
+from compytition.db import Database
 
 try:
 	import ldap
@@ -14,6 +15,9 @@ except:
 	sys.exit(1)
 
 def validate_login(username, password):
+	if app.debug:
+		return password == 'password'
+
 	if not password:
 		password = ' '
 	con = ldap.initialize(app.config['LDAP_SERVER'])
@@ -27,12 +31,6 @@ def validate_login(username, password):
 		pass
 
 	return False
-
-def authenticate():
-	return flask.Response(
-		'Could not verify your access level for that URL.\n'
-		'You have to login with proper credentials.\n', 401,
-		{'WWW-Authenticate': 'Basic realm="Login Required"'})
 
 def requires_login(func):
 	@wraps(func)
@@ -49,24 +47,37 @@ def requires_auth(func):
 	def wrapper(*args, **kwargs):
 		auth = request.authorization
 		if not auth or not validate_login(auth.username, auth.password):
-			return authenticate()
+			return flask.Response(
+				'Could not verify your access level for that URL.\n'
+				'You have to login with proper credentials.\n', 401,
+				{'WWW-Authenticate': 'Basic realm="Login Required"'})
 		session['username'] = auth.username
 		return func(*args, **kwargs)
 	return wrapper
 
 @app.before_request
 def before_request():
-	db.connect()
-	if 'username' in session:
-		user = db.query('select id from users where username=?', [session['username']], one=True)
-		if user is None:
-			db.execute('insert into users(username) values(?)', [session['username']])
-			db.commit()
+	if request.view_args and 'contest' in request.view_args:
+		g.contest = request.view_args['contest']
+		g.contest_path = os.path.join('contests', g.contest)
 
-		g.user = db.query('select * from users where username=?', [session['username']], one=True)
-		g.scoreboard = db.query('select * from users order by id asc')
-		g.status = db.query('select * from status where username=? order by id desc limit 5', [session['username']])
+		if not os.path.exists(g.contest_path):
+			return flask.abort(500)
 
+		g.db = Database(os.path.join(g.contest_path, 'data.db'))
+		g.scoreboard = g.db.query('select * from users order by id asc')
+		g.questions = g.db.query('select * from questions order by id asc')
+
+		if 'username' in session:
+			uargs = [session['username']]
+			user = g.db.query('select id from users where username=?', uargs, True)
+			if user is None:
+				g.db.query('insert into users(username) values(?)', uargs)
+				g.db.query('insert into status(username,status,message) values(?,?,?)', uargs + [0, 'You have been registered for ' + g.contest])
+				g.db.commit()
+
+			g.user = g.db.query('select * from users where username=?', uargs, True)
+			g.status = g.db.query('select * from status where username=? order by id desc limit 5', uargs)
 
 @app.teardown_request
 def teardown_request(exception):
@@ -75,23 +86,29 @@ def teardown_request(exception):
 		temp.close()
 
 @app.route('/')
-@requires_login
 def index():
-	return flask.render_template('index.html')
+	return flask.render_template('index.html', contests=sorted(os.listdir('contests')))
 
-@app.route('/scoreboard')
-@requires_login
-def scoreboard():
+@app.route('/<contest>')
+def contest(contest):
+	return flask.render_template('contest.html')
+
+@app.route('/favicon.ico')
+def favicon():
+	return flask.abort(404)
+
+@app.route('/<contest>/scoreboard')
+def scoreboard(contest):
 	return flask.render_template('scoreboard.html')
 
-@app.route('/status')
+@app.route('/<contest>/status')
 @requires_login
-def status():
+def status(contest):
 	return flask.render_template('status.html')
 
-@app.route('/submit', methods=['POST'])
+@app.route('/<contest>/submit', methods=['POST'])
 @requires_login
-def submit():
+def submit(contest):
 	ufile = request.files['solution']
 
 	username = secure_filename(session['username'])
@@ -99,7 +116,8 @@ def submit():
 	timestamp = secure_filename(datetime.now().strftime('%Y-%m-%d-%H-%M-%S'))
 	filename = secure_filename(ufile.filename)
 	upload_path = os.path.join(
-		app.config['SOLUTIONS_DIR'],
+		g.contest_path,
+		'solutions',
 		username,
 		question,
 		timestamp)
@@ -112,15 +130,15 @@ def submit():
 
 	ufile.save(upload_file)
 
-	db.execute('insert into status(username,status,message) values(?,?,?)',
+	g.db.query('insert into status(username,status,message) values(?,?,?)',
 		[session['username'], 0, 'Your submission for {} was uploaded'.format(question)])
-	db.commit()
+	g.db.commit()
 	return flask.redirect(flask.url_for('index'))
 
-@app.route('/term', methods=['POST'])
+@app.route('/<contest>/term', methods=['POST'])
 @requires_auth
-def term_submit():
-	submit()
+def term_submit(contest):
+	submit(contest)
 	return 'Success.\n'
 
 @app.route('/login', methods=['GET', 'POST'])

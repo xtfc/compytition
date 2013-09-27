@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
-	<div id="questions" class="pure-u-1-2">
-		{% include "questions.html" %}
-	</div>
-	<div id="status" class="pure-u-1-2">
-		{% include "status.html" %}
-	</div>
-	<div id="scoreboard" class="pure-u-1">
-		{% include "scoreboard.html" %}
+	<div id="login" class="pure-u-1">
+		<h1>Contest Index</h1>
+		<div class="pure-menu pure-menu-open pure-menu-horizontal">
+			<ul>
+				{% for contest in contests %}
+					<li><a href="/{{ contest }}">{{ contest }}</a></li>
+				{% endfor %}
+			</ul>
+		</div>
 	</div>
 {% endblock %}
