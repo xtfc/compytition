@@ -4,45 +4,46 @@ Programming contest server in Python.
 
 ## Setup
 
-Initialize submodules:
+#### Initialize submodules:
 
 ```bash
 $ git submodule init
 $ git submodule update
 ```
 
-Install dependencies (with `sudo` or inside of a `virtualenv`):
+#### Install dependencies (with `sudo` or inside of a `virtualenv`):
 
 ```bash
 $ pip install -U -r requirements.txt
 ```
 
-Configure the server:
+#### Configure the server:
+
+Copy `compytition/config.py.example` to `compytition/config.py` and edit it. If you have `$EDITOR` set, this will do the work for you:
 
 ```bash
-$ cp compytition/config.py.example compytition/config.py
-$ $EDITOR compytition/config.py
+$ bumpy config
 ```
 
-Write some questions:
+#### Create a new contest:
 
 ```bash
-$ mkdir -p questions
-$ echo "How write question?" > questions/q1
-...
+$ bumpy new example
 ```
 
-Initialize database:
+#### Add / edit questions:
+
+Throw text files (with Markdown, if you'd like) into `contests/example/questions/` with **no extension**.
+
+#### Create contest database:
 
 ```bash
-$ python
->>> from compytition import db
->>> db.init()
-$
+$ bumpy init example
 ```
 
-Run the dev server:
+#### Run the server:
 
 ```bash
-$ python -m compytition
+$ bumpy run # pseudo-production server
+$ bumpy debug # development server
 ```

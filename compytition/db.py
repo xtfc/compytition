@@ -31,5 +31,8 @@ class Database:
 		cur.close()
 		return (rv[0] if rv else None) if one else rv
 
+	def querymany(self, query, args):
+		cur = self.connect().executemany(query, args)
+
 	def commit(self):
 		self.connect().commit()
