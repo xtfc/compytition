@@ -3,29 +3,33 @@ import sqlite3
 from contextlib import closing
 from compytition import app
 
-def init():
-	with closing(sqlite3.connect(app.config['DATABASE'])) as db:
-		with app.open_resource('schema.sql', mode='r') as f:
-			db.cursor().executescript(f.read())
-		db.commit()
+class Database:
+	def __init__(self, path):
+		self.path = path
+		self._connection = None
 
-def connect():
-	db = getattr(flask.g, 'db', None)
-	if db is None:
-		db = sqlite3.connect(app.config['DATABASE'])
-		db.row_factory = sqlite3.Row
-		flask.g.db = db
-	return db
+	def create(self):
+		with closing(self.connect()) as db:
+			with app.open_resource('schema.sql', mode='r') as f:
+				db.cursor().executescript(f.read())
+			db.commit()
 
-def query(query, args=(), one=False):
-	cur = connect().execute(query, args)
-	rv = cur.fetchall()
-	cur.close()
-	return (rv[0] if rv else None) if one else rv
+	def connect(self):
+		if not self._connection:
+			self._connection = sqlite3.connect(self.path)
+			self._connection.row_factory = sqlite3.Row
 
-def execute(query, args=()):
-	flask.g.db.execute(query, args)
+		return self._connection
 
-def commit():
-	flask.g.db.commit()
+	def close(self):
+		if self._connection:
+			self._connection.close()
 
+	def query(self, query, args=(), one=False):
+		cur = self.connect().execute(query, args)
+		rv = cur.fetchall()
+		cur.close()
+		return (rv[0] if rv else None) if one else rv
+
+	def commit(self):
+		self.connect().commit()
