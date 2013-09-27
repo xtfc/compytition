@@ -15,6 +15,9 @@ except:
 	sys.exit(1)
 
 def validate_login(username, password):
+	if app.debug:
+		return password == 'password'
+
 	if not password:
 		password = ' '
 	con = ldap.initialize(app.config['LDAP_SERVER'])
@@ -54,7 +57,7 @@ def requires_auth(func):
 
 @app.before_request
 def before_request():
-	if 'contest' in request.view_args:
+	if request.view_args and 'contest' in request.view_args:
 		g.contest = request.view_args['contest']
 		g.contest_path = os.path.join('contests', g.contest)
 
