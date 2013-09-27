@@ -8,18 +8,21 @@
 	</ul>
 </div>
 
-{% for q in config['QUESTIONS'] %}
+{% for q in g.questions %}
 	<div id="{{ q.base }}-body" class="question" style="display: none">
 		{{ q.content|markdown }}
 	</div>
 {% endfor %}
 
-<div id="submit">
-	<form class="pure-form" action="{{ url_for('submit') }}" method="POST" enctype="multipart/form-data" onsubmit="return set_hash();">
-		<fieldset>
-			<input type="file" name="solution">
-			<input id="submit_for" type="hidden" name="question" value="err">
-			<button type="submit" class="pure-button pure-button-primary">Submit</button>
-		</fieldset>
-	</form>
-</div>
+<!-- TODO disable this on completed contests -->
+{% if 'username' in session %}
+	<div id="submit">
+		<form class="pure-form" action="{{ url_for('submit', contest=g.contest) }}" method="POST" enctype="multipart/form-data" onsubmit="return set_hash();">
+			<fieldset>
+				<input type="file" name="solution">
+				<input id="submit_for" type="hidden" name="question" value="err">
+				<button type="submit" class="pure-button pure-button-primary">Submit</button>
+			</fieldset>
+		</form>
+	</div>
+{% endif %}

@@ -3,7 +3,7 @@
 		<tr>
 			<th>ID</th>
 			<th>Name</th>
-			{% for question in config['QUESTIONS'] %}
+			{% for question in g.questions %}
 				<th>{{ question.base }}</th>
 			{% endfor %}
 			<th>Total</th>
@@ -15,7 +15,7 @@
 			<tr>
 				<td>{{ entry.id }}</td>
 				<td>{{ entry.username }}</td>
-				{% for question in config['QUESTIONS'] %}
+				{% for question in g.questions %}
 					<td>0</td>
 				{% endfor %}
 				<td>0</td>
