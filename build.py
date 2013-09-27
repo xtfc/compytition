@@ -86,12 +86,19 @@ def init(name):
 	db.commit()
 	db.close()
 
-@bumpy.task
+@bumpy.private
+def check_databases():
+	contests = os.listdir('contests')
+	for contest in contests:
+		if not os.path.exists(os.path.join('contests', contest, 'data.db')):
+			bumpy.abort('Contest "{0}" does not have a database. Please initialize it first:\n\tbumpy init {0}'.format(contest))
+
+@bumpy.requires(check_databases)
 def run():
 	'''Run the production server'''
 	app.run(host='0.0.0.0')
 
-@bumpy.task
+@bumpy.requires(check_databases)
 def debug():
 	'''Run the debug server'''
 	app.run(host='0.0.0.0', debug=True)
