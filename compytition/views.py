@@ -107,7 +107,8 @@ def submit(contest):
 	timestamp = secure_filename(datetime.now().strftime('%Y-%m-%d-%H-%M-%S'))
 	filename = secure_filename(ufile.filename)
 	upload_path = os.path.join(
-		app.config['SOLUTIONS_DIR'],
+		g.contest_path,
+		'solutions',
 		username,
 		question,
 		timestamp)
@@ -120,9 +121,9 @@ def submit(contest):
 
 	ufile.save(upload_file)
 
-	db.query('insert into status(username,status,message) values(?,?,?)',
+	g.db.query('insert into status(username,status,message) values(?,?,?)',
 		[session['username'], 0, 'Your submission for {} was uploaded'.format(question)])
-	db.commit()
+	g.db.commit()
 	return flask.redirect(flask.url_for('index', contest=g.contest))
 
 @app.route('/<contest>/term', methods=['POST'])
