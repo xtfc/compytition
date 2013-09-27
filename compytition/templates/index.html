@@ -1,21 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
-	{% if 'username' in session %}
-		<div id="questions" class="pure-u-1-2">
-			{% include "questions.html" %}
+	<div id="login" class="pure-u-1">
+		<h1>Contest Index</h1>
+		<div class="pure-menu pure-menu-open pure-menu-horizontal">
+			<ul>
+				{% for contest in contests %}
+					<li><a href="/{{ contest }}">{{ contest }}</a></li>
+				{% endfor %}
+			</ul>
 		</div>
-		<div id="status" class="pure-u-1-2">
-			{% include "status.html" %}
-		</div>
-		<div id="scoreboard" class="pure-u-1">
-			{% include "scoreboard.html" %}
-		</div>
-	{% else %}
-		<div id="questions" class="pure-u-2-5">
-			{% include "questions.html" %}
-		</div>
-		<div id="scoreboard" class="pure-u-3-5">
-			{% include "scoreboard.html" %}
-		</div>
-	{% endif %}
+	</div>
 {% endblock %}

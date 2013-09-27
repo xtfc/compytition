@@ -61,6 +61,9 @@ def before_request():
 		g.contest = request.view_args['contest']
 		g.contest_path = os.path.join('contests', g.contest)
 
+		if not os.path.exists(g.contest_path):
+			return flask.abort(500)
+
 		g.db = Database(os.path.join(g.contest_path, 'data.db'))
 		g.scoreboard = g.db.query('select * from users order by id asc')
 		g.questions = g.db.query('select * from questions order by id asc')
@@ -82,10 +85,13 @@ def teardown_request(exception):
 	if temp is not None:
 		temp.close()
 
-# FIXME add a *real* index
+@app.route('/')
+def index():
+	return flask.render_template('index.html', contests=sorted(os.listdir('contests')))
+
 @app.route('/<contest>')
-def index(contest):
-	return flask.render_template('index.html')
+def contest(contest):
+	return flask.render_template('contest.html')
 
 @app.route('/favicon.ico')
 def favicon():
@@ -127,7 +133,7 @@ def submit(contest):
 	g.db.query('insert into status(username,status,message) values(?,?,?)',
 		[session['username'], 0, 'Your submission for {} was uploaded'.format(question)])
 	g.db.commit()
-	return flask.redirect(flask.url_for('index', contest=g.contest))
+	return flask.redirect(flask.url_for('index'))
 
 @app.route('/<contest>/term', methods=['POST'])
 @requires_auth
@@ -139,7 +145,7 @@ def term_submit(contest):
 def login():
 	if 'username' in session:
 		flask.flash('You are already logged in')
-		return flask.redirect(flask.url_for('index', contest=g.contest))
+		return flask.redirect(flask.url_for('index'))
 
 	if request.method == 'GET':
 		return flask.render_template('login.html')
@@ -147,7 +153,7 @@ def login():
 	if validate_login(request.form['username'], request.form['password']):
 		session['username'] = request.form['username']
 		flask.flash('Logged in')
-		return flask.redirect(flask.url_for('index', contest='test'))
+		return flask.redirect(flask.url_for('index'))
 
 	flask.flash('Invalid login')
 	return flask.redirect(flask.url_for('login'))
