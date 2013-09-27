@@ -80,7 +80,6 @@ def before_request():
 			g.user = g.db.query('select * from users where username=?', uargs, True)
 			g.status = g.db.query('select * from status where username=? order by id desc limit 5', uargs)
 
-
 @app.teardown_request
 def teardown_request(exception):
 	temp = getattr(g, 'db', None)
@@ -90,6 +89,10 @@ def teardown_request(exception):
 @app.route('/<contest>')
 def index(contest):
 	return flask.render_template('index.html')
+
+@app.route('/favicon.ico')
+def favicon():
+	return flask.abort(404)
 
 @app.route('/<contest>/scoreboard')
 def scoreboard(contest):
