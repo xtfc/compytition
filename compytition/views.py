@@ -56,7 +56,7 @@ def requires_auth(func):
 def before_request():
 	if 'contest' in request.view_args:
 		g.contest = request.view_args['contest']
-		g.contest_path = os.path.join('contests', request.view_args['contest'])
+		g.contest_path = os.path.join('contests', g.contest)
 
 		g.db = Database(os.path.join(g.contest_path, 'data.db'))
 		g.scoreboard = g.db.query('select * from users order by id asc')
@@ -75,6 +75,7 @@ def before_request():
 			user = g.db.query('select id from users where username=?', uargs, True)
 			if user is None:
 				g.db.query('insert into users(username) values(?)', uargs)
+				g.db.query('insert into status(username,status,message) values(?,?,?)', uargs + [0, 'You have been registered for ' + g.contest])
 				g.db.commit()
 
 			g.user = g.db.query('select * from users where username=?', uargs, True)
@@ -86,6 +87,7 @@ def teardown_request(exception):
 	if temp is not None:
 		temp.close()
 
+# FIXME add a *real* index
 @app.route('/<contest>')
 def index(contest):
 	return flask.render_template('index.html')
@@ -149,7 +151,7 @@ def login():
 	if validate_login(request.form['username'], request.form['password']):
 		session['username'] = request.form['username']
 		flask.flash('Logged in')
-		return flask.redirect(flask.url_for('index', contest=g.contest))
+		return flask.redirect(flask.url_for('index', contest='test'))
 
 	flask.flash('Invalid login')
 	return flask.redirect(flask.url_for('login'))
