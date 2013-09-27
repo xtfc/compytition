@@ -1,18 +1,6 @@
-import os
+# vim: set ft=python:
 from compytition import app
 
 app.config['LDAP_SERVER'] = 'ldap://127.0.0.1:389'
 app.config['LDAP_DN'] = lambda x: 'cn=' + x + ',cn=users,dc=ldap,dc=ldap,dc=ldap'
 app.config['SECRET_KEY'] = 'thiskeyneedstobesecret'
-app.config['DATABASE'] = '/tmp/compytition.db'
-app.config['SOLUTIONS_DIR'] = 'solutions'
-app.config['QUESTION_DIR'] = 'questions'
-app.config['QUESTIONS'] = []
-for f in sorted(os.listdir(app.config['QUESTION_DIR'])):
-	path = os.path.join(app.config['QUESTION_DIR'], f)
-	question = {
-		'base': f,
-		'src': path,
-		'content': open(path).read()
-		}
-	app.config['QUESTIONS'].append(question)
