@@ -17,6 +17,8 @@ $ git submodule update
 $ pip install -U -r requirements.txt
 ```
 
+`pip` can usually be found in your distribution's `python-pip` package. If you want to use LDAP authentication (currently the only supported method), you will also need the `python-ldap` package.
+
 #### Configure the server:
 
 Copy `compytition/config.py.example` to `compytition/config.py` and edit it. If you have `$EDITOR` set, this will do the work for you:
@@ -28,22 +30,31 @@ $ bumpy config
 #### Create a new contest:
 
 ```bash
-$ bumpy new example
+$ bumpy new <name>
 ```
 
 #### Add / edit questions:
 
-Throw text files (with Markdown, if you'd like) into `contests/example/questions/` with **no extension**.
+Throw text files (with Markdown, if you'd like) into `contests/<name>/questions/` with **no extension**.
 
 #### Create contest database:
 
 ```bash
-$ bumpy init example
+$ bumpy init <name>
 ```
 
 #### Run the server:
 
+For debug or development:
+
+***Do not use this for hosting contests! It allows execution of arbitrary Python code on the host.***
+
 ```bash
-$ bumpy run # pseudo-production server
-$ bumpy debug # development server
+$ bumpy debug
+```
+
+For production:
+
+```bash
+$ bumpy run
 ```
