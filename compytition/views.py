@@ -60,6 +60,7 @@ def before_request():
 	if request.view_args and 'contest' in request.view_args:
 		g.contest = request.view_args['contest']
 		g.contest_path = os.path.join('contests', g.contest)
+		g.active = os.path.exists(os.path.join(g.contest_path, 'active'))
 
 		if not os.path.exists(g.contest_path):
 			return flask.abort(500)
@@ -71,7 +72,7 @@ def before_request():
 		if 'username' in session:
 			uargs = [session['username']]
 			user = g.db.query('select id from users where username=?', uargs, True)
-			if user is None:
+			if user is None and g.active:
 				g.db.query('insert into users(username) values(?)', uargs)
 				g.db.query('insert into status(username,status,message) values(?,?,?)', uargs + [0, 'You have been registered for ' + g.contest])
 				g.db.commit()
@@ -109,6 +110,9 @@ def status(contest):
 @app.route('/<contest>/submit', methods=['POST'])
 @requires_login
 def submit(contest):
+	if not g.active:
+		return flask.abort(401)
+
 	ufile = request.files['solution']
 
 	username = secure_filename(session['username'])
