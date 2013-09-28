@@ -71,11 +71,16 @@ def before_request():
 
 		if 'username' in session:
 			uargs = [session['username']]
+			nargs = [session['nickname'], session['username']]
 			user = g.db.query('select id from users where username=?', uargs, True)
+
 			if user is None and g.active:
-				g.db.query('insert into users(username) values(?)', uargs)
+				g.db.query('insert into users(nickname,username) values(?,?)', nargs)
 				g.db.query('insert into status(username,status,message) values(?,?,?)', uargs + [0, 'You have been registered for ' + g.contest])
-				g.db.commit()
+			else:
+				g.db.query('update users set nickname=? where username=?', nargs)
+
+			g.db.commit()
 
 			g.user = g.db.query('select * from users where username=?', uargs, True)
 			g.status = g.db.query('select * from status where username=? order by id desc limit 5', uargs)
@@ -156,7 +161,8 @@ def login():
 
 	if validate_login(request.form['username'], request.form['password']):
 		session['username'] = request.form['username']
-		flask.flash('Logged in')
+		session['nickname'] = request.form['nickname']
+		flask.flash('Logged in as {} / {}'.format(session['nickname'], session['username']))
 		return flask.redirect(flask.url_for('index'))
 
 	flask.flash('Invalid login')
@@ -165,5 +171,6 @@ def login():
 @app.route('/logout')
 def logout():
 	session.pop('username', None)
+	session.pop('nickname', None)
 	flask.flash('Logged out')
 	return flask.redirect(flask.url_for('login'))

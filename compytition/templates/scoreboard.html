@@ -1,7 +1,7 @@
 <table class="pure-table pure-table-bordered pure-table-striped">
 	<thead>
 		<tr>
-			<th>ID</th>
+			<th>#</th>
 			<th>Name</th>
 			{% for question in g.questions %}
 				<th>{{ question.name }}</th>
@@ -13,8 +13,11 @@
 	<tbody>
 		{% for user in g.scoreboard %}
 			<tr>
+				<td>{{ loop.index }}</td>
 				{% for field in user %}
-					<td>{{ field }}</td>
+					{% if loop.index0 > 1 %}
+						<td>{{ field }}</td>
+					{% endif %}
 				{% endfor %}
 				<td>?</td>
 			</tr>
