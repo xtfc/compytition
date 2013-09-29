@@ -16,8 +16,10 @@
 			<tr>
 				<td>{{ loop.index }}</td>
 				{% for field in user %}
-					{% if loop.index0 > 1 %}
+					{% if loop.index0 == 2 or loop.last %}
 						<td>{{ field }}</td>
+					{% elif loop.index0 > 2 %}
+						<td>{{ field|time|safe }}</td>
 					{% endif %}
 				{% endfor %}
 			</tr>
