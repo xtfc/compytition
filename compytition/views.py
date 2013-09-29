@@ -66,8 +66,13 @@ def before_request():
 			return flask.abort(500)
 
 		g.db = Database(os.path.join(g.contest_path, 'data.db'))
-		g.scoreboard = g.db.query('select * from users order by id asc')
 		g.questions = g.db.query('select * from questions order by id asc')
+
+		q_total = '+'.join([q['name'] for q in g.questions])
+		q_score = '+'.join(['(' + q['name'] + '>0)' for q in g.questions])
+		q = 'select *,({}) as total,({}) as score from users order by score desc, total asc'
+		q = q.format(q_total, q_score)
+		g.scoreboard = g.db.query(q)
 
 		if 'username' in session:
 			uargs = [session['username']]
