@@ -13,7 +13,11 @@
 
 	<tbody>
 		{% for user in g.scoreboard %}
-			<tr>
+			{% if 'username' in session and user['username'] == session['username'] %}
+				<tr class="me">
+			{% else %}
+				<tr>
+			{% endif %}
 				<td>{{ loop.index }}</td>
 				{% for field in user %}
 					{% if loop.index0 == 2 or loop.last %}

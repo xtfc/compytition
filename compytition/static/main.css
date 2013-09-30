@@ -28,6 +28,10 @@
 	width: 100%;
 }
 
+#scoreboard tr.me {
+	background-color: rgb(152, 186, 221);
+}
+
 #questions #tabs {
 	text-align: center;
 }
