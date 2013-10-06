@@ -15,7 +15,7 @@ $ pip install -U -r requirements.txt
 #### Run the setup script
 
 ```bash
-$ bumpy setup
+$ bump setup
 ```
 
 #### Configure the server:
@@ -23,13 +23,13 @@ $ bumpy setup
 Copy `compytition/config.py.example` to `compytition/config.py` and edit it. If you have `$EDITOR` set, this will do the work for you:
 
 ```bash
-$ bumpy config
+$ bump config
 ```
 
 #### Create a new contest:
 
 ```bash
-$ bumpy new <name>
+$ bump new <name>
 ```
 
 #### Add / edit questions:
@@ -39,7 +39,7 @@ Throw text files (with Markdown, if you'd like) into `contests/<name>/questions/
 #### Create contest database:
 
 ```bash
-$ bumpy init <name>
+$ bump init <name>
 ```
 
 #### Run the server:
@@ -49,11 +49,11 @@ For debug or development:
 ***Do not use this for hosting contests! It allows execution of arbitrary Python code on the host.***
 
 ```bash
-$ bumpy debug
+$ bump debug
 ```
 
 For production:
 
 ```bash
-$ bumpy run
+$ bump run
 ```

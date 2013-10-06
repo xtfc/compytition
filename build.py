@@ -1,5 +1,4 @@
-import bumpy
-import os, sys, shutil
+import bumpy as b, os, sys, shutil
 
 # won't be able to find compytition package without this
 if '.' not in sys.path:
@@ -12,15 +11,13 @@ try:
 except:
 	pass
 
-bumpy.config(cli=True)
-
-@bumpy.task
+@b.task
 def setup():
 	'''Run standard setup tasks'''
-	bumpy.shell('git submodule init')
-	bumpy.shell('git submodule update')
+	b.shell('git submodule init')
+	b.shell('git submodule update')
 
-@bumpy.task
+@b.task
 def config():
 	'''Create the default config file and open it with $EDITOR'''
 	config_ex = os.path.join('compytition', 'config.py.example')
@@ -31,7 +28,7 @@ def config():
 
 	os.system('{} "{}"'.format(os.getenv('EDITOR', 'nano'), config))
 
-@bumpy.task
+@b.task
 def new(name):
 	'''Create a skeleton contest'''
 	path = os.path.join('contests', name)
@@ -45,7 +42,7 @@ def new(name):
 	test.write('This is a sample question file. You can use [Markdown](http://daringfireball.net/projects/markdown/) here.\n')
 	test.close()
 
-@bumpy.task
+@b.task
 def init(name):
 	'''Initialize/reset a contest database'''
 	print "Reading question files..."
@@ -87,19 +84,19 @@ def init(name):
 	db.commit()
 	db.close()
 
-@bumpy.private
+@b.task('private')
 def check_databases():
 	contests = os.listdir('contests')
 	for contest in contests:
 		if not os.path.exists(os.path.join('contests', contest, 'data.db')):
-			bumpy.abort('Contest "{0}" does not have a database. Please initialize it first:\n\tbumpy init {0}'.format(contest))
+			b.abort('Contest "{0}" does not have a database. Please initialize it first:\n\tbump init {0}'.format(contest))
 
-@bumpy.requires(check_databases)
+@b.task(reqs=check_databases)
 def run():
 	'''Run the production server'''
 	app.run(host='0.0.0.0')
 
-@bumpy.requires(check_databases)
+@b.task(reqs=check_databases)
 def debug():
 	'''Run the debug server'''
 	app.run(host='0.0.0.0', debug=True)
