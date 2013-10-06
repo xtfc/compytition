@@ -1,32 +1,9 @@
-import bumpy as b, os, sys, shutil
+import bumpy as b, os
 
-# won't be able to find compytition package without this
-if '.' not in sys.path:
-	sys.path.append('.')
-
-# if compytition/config.py doesn't exist, this explodes
 try:
 	from compytition.db import Database
-	from compytition import app
 except:
 	pass
-
-@b.task
-def setup():
-	'''Run standard setup tasks'''
-	b.shell('git submodule init')
-	b.shell('git submodule update')
-
-@b.task
-def config():
-	'''Create the default config file and open it with $EDITOR'''
-	config_ex = os.path.join('compytition', 'config.py.example')
-	config = os.path.join('compytition', 'config.py')
-	if not os.path.exists(config):
-		print "Copying example config..."
-		shutil.copyfile(config_ex, config)
-
-	os.system('{} "{}"'.format(os.getenv('EDITOR', 'nano'), config))
 
 @b.task
 def new(name):
@@ -83,20 +60,3 @@ def init(name):
 
 	db.commit()
 	db.close()
-
-@b.task('private')
-def check_databases():
-	contests = os.listdir('contests')
-	for contest in contests:
-		if not os.path.exists(os.path.join('contests', contest, 'data.db')):
-			b.abort('Contest "{0}" does not have a database. Please initialize it first:\n\tbump init {0}'.format(contest))
-
-@b.task(reqs=check_databases)
-def run():
-	'''Run the production server'''
-	app.run(host='0.0.0.0')
-
-@b.task(reqs=check_databases)
-def debug():
-	'''Run the debug server'''
-	app.run(host='0.0.0.0', debug=True)
