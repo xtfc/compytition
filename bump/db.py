@@ -5,6 +5,13 @@ try:
 except:
 	pass
 
+@b.task('private')
+def check():
+	contests = os.listdir('contests')
+	for contest in contests:
+		if not os.path.exists(os.path.join('contests', contest, 'data.db')):
+			b.abort('Contest "{0}" does not have a database. Please initialize it first:\n\tbump db.init {0}'.format(contest))
+
 @b.task
 def new(name):
 	'''Create a skeleton contest'''
