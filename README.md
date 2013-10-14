@@ -29,7 +29,7 @@ $ bump config
 #### Create a new contest:
 
 ```bash
-$ bump new <name>
+$ bump db.new <name>
 ```
 
 #### Add / edit questions:
@@ -39,7 +39,7 @@ Throw text files (with Markdown, if you'd like) into `contests/<name>/questions/
 #### Create contest database:
 
 ```bash
-$ bump init <name>
+$ bump db.init <name>
 ```
 
 #### Run the server:
